@@ -15,33 +15,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+import com.ucne.myapplication.data.local.database.TecnicoDb
 import com.ucne.myapplication.data.local.database.TicketDb
+import com.ucne.myapplication.data.repository.TecnicoRepository
 import com.ucne.myapplication.data.repository.TicketRepository
+import com.ucne.myapplication.presentation.tecnico.TecnicoListScreen
+import com.ucne.myapplication.presentation.tecnico.TecnicoScreen
+import com.ucne.myapplication.presentation.tecnico.TecnicoViewModel
 import com.ucne.myapplication.presentation.ticket.TicketListScreen
 import com.ucne.myapplication.presentation.ticket.TicketScreen
 import com.ucne.myapplication.presentation.ticket.TicketViewModel
+
 import com.ucne.roomdemo.ui.theme.RoomDemoTheme
 
 class MainActivity : ComponentActivity() {
-    private lateinit var ticketDb: TicketDb
+    private lateinit var tecnicoDb: TecnicoDb
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ticketDb = Room.databaseBuilder(
+        tecnicoDb = Room.databaseBuilder(
             this,
-            TicketDb::class.java,
-            "Ticket.db"
+            TecnicoDb::class.java,
+            "Tecnico.db"
         )
             .fallbackToDestructiveMigration()
             .build()
 
-        val repository = TicketRepository(ticketDb.ticketDao())
+        val repository = TecnicoRepository(tecnicoDb.tecnicoDao())
         enableEdgeToEdge()
         setContent {
             RoomDemoTheme {
                 Surface {
-                    val viewModel: TicketViewModel = viewModel(
-                        factory = TicketViewModel.provideFactory(repository)
+                    val viewModel: TecnicoViewModel
+                    = viewModel(
+                        factory = TecnicoViewModel.provideFactory(repository)
                     )
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
@@ -52,9 +59,9 @@ class MainActivity : ComponentActivity() {
                                 .padding(8.dp)
                         ) {
 
-                            TicketScreen(viewModel = viewModel)
-                            TicketListScreen(viewModel = viewModel,
-                                onVerTicket = {
+                            TecnicoScreen(viewModel = viewModel)
+                            TecnicoListScreen(viewModel = viewModel,
+                                onVerTecnico = {
 
                                 })
                         }
